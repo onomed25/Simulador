@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <h1>Simulador</h1>
+    </header>
+    <main>
+        <div id="priceInfo"></div>
+        
+        <div class="section rates">
+            <div class="rate-item">
+                <i class="fas fa-percentage"></i><br>
+                <span id="selicRate">Carregando...</span><br>SELIC
+            </div>
+            <div class="rate-item">
+                <i class="fas fa-chart-line"></i><br>
+                <span id="trRate">Carregando...</span><br>TR
+            </div>
+            <div class="rate-item">
+                <i class="fas fa-hand-holding-usd"></i><br>
+                <span id="cdbRate">Carregando...</span><br>CDB
+            </div>
+        </div>
+
+        <form id="investmentForm">
+            <div class="input-group">
+                <label for="initialAmount">Valor Inicial (R$):</label>
+                <div class="input-wrapper"><input type="number" id="initialAmount" value="1000" required><i class="icon-money"></i></div>
+            </div>
+            <div class="input-group">
+                <label for="timeInMonths">Tempo (em meses):</label>
+                <div class="input-wrapper"><input type="number" id="timeInMonths" value="1" required><i class="icon-time"></i></div>
+            </div>
+            <button type="submit">Calcular</button>
+        </form>
+        
+        <div id="results"></div>
+
+        
+      
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
