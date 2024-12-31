@@ -6,10 +6,18 @@
     <title>Simulador</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="icon" type="image/png" sizes="180x180" href="simpli.png">
 </head>
 <body>
     <header>
-        <h1>Simulador</h1>
+        <header>
+            <h1>Simulador Da Poupança</h1>
+            <nav>
+                <a href="index.html" class="active">Home</a>
+                <a href="earn.html">Earn</a>
+            </nav>
+        </header>
+        
     </header>
     <main>
         <div id="priceInfo"></div>
@@ -38,14 +46,17 @@
                 <label for="timeInMonths">Tempo (em meses):</label>
                 <div class="input-wrapper"><input type="number" id="timeInMonths" value="1" required><i class="icon-time"></i></div>
             </div>
+            
+            
             <button type="submit">Calcular</button>
         </form>
         
         <div id="results"></div>
 
         
-      
-    </main>
+
+    </main> 
     <script src="script.js"></script>
 </body>
 </html>
+
