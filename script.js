@@ -17,7 +17,7 @@ async function fetchRates() {
         const selicResponse = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
         const selicData = await selicResponse.json();
         const selic = parseFloat(selicData[0].valor).toFixed(4);
-        document.getElementById('selicRate').textContent = `${selic}%`;
+        const sekic = document.getElementById('selicRate').textContent = `${parseFloat(selic).toFixed(2)}%`;
 
      
         const trResponse = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.226/dados/ultimos/1?formato=json');
@@ -26,7 +26,7 @@ async function fetchRates() {
         document.getElementById('trRate').textContent = `${tr}%`;
 
       
-        document.getElementById('cdbRate').textContent = `${selic}%`;
+        document.getElementById('cdbRate').textContent = `${parseFloat(selic).toFixed(2)}%`;
 
         const initialInvestment = parseFloat(document.getElementById('initialAmount').value);
         const timeInMonths = parseInt(document.getElementById('timeInMonths').value);
@@ -76,7 +76,7 @@ async function fetchRates() {
             <section class="financial-details">
     <div class="detail-item">
         <span>Taxa Selic:</span>
-        <p class="amount">${selic}%</p>
+        <p class="amount">${sekic}</p>
     </div>
     <div class="detail-item">
         <span>Investimento inicial:</span>
