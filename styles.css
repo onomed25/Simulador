@@ -229,3 +229,54 @@ button:hover {
     cursor: pointer;
     transition: background 0.3s ease;
 }
+
+
+
+header h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+/* Estilo do menu de navegação */
+nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Espaçamento entre os links */
+}
+
+/* Links do menu */
+nav a {
+    text-decoration: none; /* Remove sublinhado */
+    color: #2980b9;
+    font-size: 1rem;
+    padding: 10px 15px;
+    border-radius: 5px; /* Bordas arredondadas */
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transição suave */
+}
+
+/* Efeito hover nos links */
+nav a:hover {
+    background: #ffffff; /* Fundo branco ao passar o mouse */
+    color: #3498db; /* Texto azul ao passar o mouse */
+}
+
+/* Estilo ativo para o link atual */
+nav a.active {
+    background: #2980b9; /* Azul mais escuro para o ativo */
+    color: #ffffff; /* Texto em branco */
+    font-weight: bold;
+}
+
+/* Responsividade para dispositivos menores */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Alinha os links verticalmente */
+        gap: 10px;
+    }
+
+    nav a {
+        text-align: center;
+        width: 100%; /* Links ocupam a largura inteira */
+    }
+}
