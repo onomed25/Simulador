@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', () => {
     fetchRates();
     fetchPrices();
@@ -16,17 +15,17 @@ async function fetchRates() {
         
         const selicResponse = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.432/dados/ultimos/1?formato=json');
         const selicData = await selicResponse.json();
-        const selic = parseFloat(selicData[0].valor).toFixed(4);
-        const sekic = document.getElementById('selicRate').textContent = `${parseFloat(selic).toFixed(2)}%`;
+        const selic = parseFloat(selicData[0].valor);
+        document.getElementById('selicRate').textContent = `${selic.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
      
         const trResponse = await fetch('https://api.bcb.gov.br/dados/serie/bcdata.sgs.226/dados/ultimos/1?formato=json');
         const trData = await trResponse.json();
-        const tr = parseFloat(trData[0].valor).toFixed(4);
-        document.getElementById('trRate').textContent = `${tr}%`;
+        const tr = parseFloat(trData[0].valor);
+        document.getElementById('trRate').textContent = `${tr.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
       
-        document.getElementById('cdbRate').textContent = `${parseFloat(selic).toFixed(2)}%`;
+        document.getElementById('cdbRate').textContent = `${selic.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
 
         const initialInvestment = parseFloat(document.getElementById('initialAmount').value);
         const timeInMonths = parseInt(document.getElementById('timeInMonths').value);
@@ -37,7 +36,7 @@ async function fetchRates() {
         } else {
             poupancaMonthlyRate = (selic / 100 * 0.7) / 12; 
         }
-        const trMonthly = parseFloat(tr) / 100 / 12; 
+        const trMonthly = tr / 100 / 12; 
         const poupancaFinalAmount = initialInvestment * Math.pow((1 + (poupancaMonthlyRate + trMonthly)), timeInMonths);
 
         
@@ -76,31 +75,31 @@ async function fetchRates() {
             <section class="financial-details">
     <div class="detail-item">
         <span>Taxa Selic:</span>
-        <p class="amount">${sekic}</p>
+        <p class="amount">${selic.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%</p>
     </div>
     <div class="detail-item">
         <span>Investimento inicial:</span>
-        <p class="amount">R$ ${initialInvestment.toFixed(2)}</p>
+        <p class="amount">R$ ${initialInvestment.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
     <div class="detail-item">
         <span>Valor final na poupança após ${timeInMonths} meses:</span>
-        <p class="amount">R$ ${poupancaFinalAmount.toFixed(2)}</p>
+        <p class="amount">R$ ${poupancaFinalAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
     <div class="detail-item">
         <span>Valor bruto no CDB após ${timeInMonths} meses:</span>
-        <p class="amount">R$ ${cdbGrossAmount.toFixed(2)}</p>
+        <p class="amount">R$ ${cdbGrossAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
     <div class="detail-item">
         <span>Imposto de Renda descontado:</span>
-        <p class="amount">R$ ${taxAmount.toFixed(2)}</p>
+        <p class="amount">R$ ${taxAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
     <div class="detail-item">
         <span>IOF descontado:</span>
-        <p class="amount">R$ ${iofAmount.toFixed(2)}</p>
+        <p class="amount">R$ ${iofAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
     <div class="detail-item">
         <span>Valor líquido no CDB após ${timeInMonths} meses (após IR e IOF):</span>
-        <p class="amount">R$ ${cdbNetAmount.toFixed(2)}</p>
+        <p class="amount">R$ ${cdbNetAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
     </div>
 </section>
 
@@ -109,4 +108,3 @@ async function fetchRates() {
         document.getElementById('results').innerHTML = '<p>Erro ao buscar as taxas ou calcular investimentos: ' + error.message + '</p>';
     }
 }
-
