@@ -21,9 +21,9 @@ function calculateReturn() {
             const r = usdc * (earn / 100);
             const rreal = r * usdcToBrl; 
 
-            document.getElementById('investedAmount').textContent = `${real.toFixed(2)} R$`;
-            document.getElementById('earnDollars').textContent = `${r.toFixed(2)} USDC`;
-            document.getElementById('earnReais').textContent = `${rreal.toFixed(2)} R$`;
+            document.getElementById('investedAmount').textContent = `${real.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} R$`;
+            document.getElementById('earnDollars').textContent = `${r.toFixed(2)} USDC`; // USDC é em dólares, então mantemos o formato americano aqui
+            document.getElementById('earnReais').textContent = `${rreal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} R$`;
             document.getElementById('results').innerHTML = "<p class='success'>Cálculo realizado com sucesso!</p>";
         })
         .catch(error => {
@@ -38,7 +38,7 @@ function fetchAndDisplayRates() {
         .then(response => response.json())
         .then(data => {
             const usdcToBrl = data['usd-coin'].brl;
-            document.getElementById('usd-coin').textContent = usdcToBrl.toFixed(4);
+            document.getElementById('usd-coin').textContent = usdcToBrl.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         })
         .catch(error => {
             document.getElementById('usd-coin').textContent = "Erro ao carregar";
@@ -50,7 +50,7 @@ function fetchAndDisplayRates() {
         .then(response => response.json())
         .then(data => {
             const btcToUsd = data.bitcoin.usd;
-            document.getElementById('btc-usd').textContent = btcToUsd.toFixed(2);
+            document.getElementById('btc-usd').textContent = btcToUsd.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         })
         .catch(error => {
             document.getElementById('btc-usd').textContent = "Erro ao carregar";
