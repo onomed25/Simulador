@@ -1,0 +1,1 @@
+Simulador de Investimentos é um projeto desenvolvido para ajudar usuários a entenderem e compararem diferentes opções de investimento, como poupança, CDBs, ativos da B3 e o programa Earn da Binance. O simulador permite calcular projeções de rentabilidade, comparar estratégias e tomar decisões financeiras mais informadas.
