@@ -59,3 +59,4 @@ function fetchAndDisplayRates() {
 }
 
 window.onload = fetchAndDisplayRates;
+
