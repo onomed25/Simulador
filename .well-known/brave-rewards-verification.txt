@@ -1,0 +1,4 @@
+This is a Brave Creators publisher verification file.
+
+Domain: simulador-ten-mu.vercel.app
+Token: 18f7e81a1987453421d0a67a47ff9956d0d95d6a6a07ab0f18f8a23f58b4479c
