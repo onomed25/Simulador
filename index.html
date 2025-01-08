@@ -10,15 +10,12 @@
 </head>
 <body>
     <header>
-        <header>
-            <h1>Simulador Da Poupança</h1>
-            <nav>
-                <a href="index.html" class="active">Home</a>
-                <a href="earn.html">Earn</a>
-                <a href="b3.html">B3</a>
-            </nav>
-        </header>
-        
+        <h1>Simulador Da Poupança</h1>
+        <nav>
+            <a href="index.html" class="active">Home</a>
+            <a href="earn.html">Earn</a>
+            <a href="b3.html">B3</a>
+        </nav>
     </header>
     <main>
         <div id="priceInfo"></div>
@@ -41,23 +38,17 @@
         <form id="investmentForm">
             <div class="input-group">
                 <label for="initialAmount">Valor Inicial (R$):</label>
-                <div class="input-wrapper"><input type="number" id="initialAmount" value="1000" required><i class="icon-money"></i></div>
+                <div class="input-wrapper"><input type="number" id="initialAmount" value="1000" required><i class="fas fa-money-bill-wave"></i></div>
             </div>
             <div class="input-group">
                 <label for="timeInMonths">Tempo (em meses):</label>
-                <div class="input-wrapper"><input type="number" id="timeInMonths" value="1" required><i class="icon-time"></i></div>
+                <div class="input-wrapper"><input type="number" id="timeInMonths" value="1" required><i class="fas fa-clock"></i></div>
             </div>
-            
-            
             <button type="submit">Calcular</button>
         </form>
         
         <div id="results"></div>
-
-        
-
     </main> 
     <script src="script.js"></script>
 </body>
 </html>
-
