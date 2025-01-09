@@ -1,19 +1,14 @@
 {
   "rewrites": [
     {
-      "source": "/b3/(.*)",
-      "destination": "/html/b3/$1.html"
+      "source": "/(.*)",
+      "destination": "/html/$1.html"
     }
   ],
   "redirects": [
     {
       "source": "/html/(.*)\\.html",
       "destination": "/$1",
-      "permanent": true
-    },
-    {
-      "source": "/html/b3/(.*)",
-      "destination": "/b3/$1",
       "permanent": true
     }
   ]
