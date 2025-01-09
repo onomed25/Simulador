@@ -1,0 +1,64 @@
+/* Botão hambúrguer no lado esquerdo */
+.menu-toggle {
+    display: none; 
+      
+}
+
+
+/* Estilo para telas menores */
+@media (max-width: 768px) {
+    nav {
+        flex-direction: column; /* Alinha os links verticalmente */
+        gap: 10px; /* Espaço entre os itens do menu */
+        display: none; /* Esconde o menu inicialmente */
+        background-color: #3498db; /* Cor de fundo do menu no modo mobile */
+        padding: 10px;
+        border-radius: 5px;
+        position: absolute;
+        top: 140px; /* Ajusta a posição do menu abaixo do cabeçalho */
+        width: 80%; /* Faz o menu ocupar uma parte da largura da tela */
+        left: 10%; /* Centraliza o menu horizontalmente */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        z-index: 1;
+    }
+
+    nav a {
+        color: #ffffff; /* Cor do texto dos links no menu mobile */
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .menu-toggle {
+        display: block; /* Mostra o botão "hambúrguer" */
+        font-size: 1.5rem;
+        background: none;
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        right: 360px;
+    }
+
+    .menu-toggle.active + nav {
+        display: flex; /* Mostra o menu quando o botão é clicado */
+    }
+}
+
+/* Button Styles */
+button {
+    background: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 12px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: #2980b9;
+    transform: scale(1.03);
+}
