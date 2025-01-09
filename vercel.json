@@ -1,5 +1,15 @@
 {
   "rewrites": [
-    { "source": "/earn", "destination": "/html/earn.html" }
+    {
+      "source": "/(.*)",
+      "destination": "/$1.html"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/(.*)\\.html",
+      "destination": "/$1",
+      "permanent": true
+    }
   ]
 }
