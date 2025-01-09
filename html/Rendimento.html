@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preço e Último Rendimento</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <h1>Preço Do Rendimento</h1>
+        <nav>
+            <a href="/index.html">Home</a>
+            <a href="/html/earn.html">Earn</a>
+            <a href="/html/b3.html">B3</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="informacoes">
+            <div class="section">
+                <div class="section rates">
+                    <div class="rate-item">
+                        <i class="fas fa-dollar-sign"></i><br>
+                        <span id="precoFundo">Carregando...</span><br>Preço da Cota
+                    </div>
+                    <div class="rate-item">
+                        <i class="fas fa-dollar-sign"></i><br>
+                        <span id="ultimoRendimento">Carregando...</span><br>Último Rendimento
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+
+        <h2>Cálculo de Rendimento</h2>
+        <div class="input-group">
+            <label for="investir">Quanto você deseja investir (R$):</label>
+            <input type="number" id="investir" placeholder="Exemplo: 1000" />
+        </div>
+        <br>
+        <center>
+        <button class="button" onclick="calcularRendimento()">Calcular Rendimento</button>
+        </center>
+        <br>
+        <div id="resultado">
+            <div class="detail-item">
+                <span>Número de Cotas</span>
+                <span class="amount" id="numeroCotas"></span>
+            </div>
+            <div class="detail-item">
+                <span>Rendimento</span>
+                <span class="amount" id="earnDollars"></span>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let ultimoRendimentoGlobal = 0; // Variável para armazenar o último rendimento global
+        let precoCotaGlobal = 0; // Variável para armazenar o preço da cota
+
+        // Função para pegar as informações do fundo (Preço e Último Rendimento)
+        async function pegarInformacoesFundo(fundo) {
+            const proxyUrl = 'https://api.allorigins.win/get?url=';
+            const url = `https://www.fundsexplorer.com.br/funds/${fundo}`;
+
+            const precoFundoSpan = document.getElementById('precoFundo');
+            const rendimentoFundoSpan = document.getElementById('ultimoRendimento');
+
+            try {
+                const response = await fetch(proxyUrl + encodeURIComponent(url));
+                if (!response.ok) {
+                    throw new Error(`Falha ao carregar a página: ${response.status}`);
+                }
+
+                const data = await response.json();
+                const html = data.contents;
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                const valorElemento = doc.querySelector('div.headerTicker__content__price');
+                if (valorElemento) {
+                    const valor = valorElemento.textContent.trim();
+                    precoCotaGlobal = parseFloat(valor.replace('R$', '').replace('.', '').replace(',', '.'));
+                    const valorFormatado = precoCotaGlobal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                    precoFundoSpan.textContent = valorFormatado;
+                } else {
+                    throw new Error(`Não foi possível encontrar o valor do fundo ${fundo}.`);
+                }
+
+                const rendimentoElemento = doc.querySelector('.indicators__box:nth-of-type(2) p:nth-of-type(2) b');
+                if (rendimentoElemento) {
+                    ultimoRendimentoGlobal = parseFloat(rendimentoElemento.textContent.trim().replace(',', '.'));
+                    rendimentoFundoSpan.textContent = ultimoRendimentoGlobal.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                } else {
+                    throw new Error(`Não foi possível encontrar o último rendimento do fundo ${fundo}.`);
+                }
+
+            } catch (error) {
+                console.error('Erro:', error);
+                precoFundoSpan.textContent = `Erro ao carregar informações: ${error.message}`;
+                rendimentoFundoSpan.textContent = 'Erro ao carregar informações';
+            }
+        }
+
+        async function carregarInformacoes() {
+            const fundo = new URLSearchParams(window.location.search).get('fundo');
+            if (!fundo) {
+                document.getElementById('precoFundo').textContent = "Erro: Nenhum fundo especificado.";
+                return;
+            }
+            await pegarInformacoesFundo(fundo);
+        }
+
+        function calcularRendimento() {
+            const valorInvestido = parseFloat(document.getElementById('investir').value);
+            if (isNaN(valorInvestido) || valorInvestido <= 0) {
+                alert("Por favor, insira um valor válido para o investimento.");
+                return;
+            }
+
+            if (ultimoRendimentoGlobal === 0 || precoCotaGlobal === 0) {
+                alert("Erro ao carregar informações de rendimento ou preço da cota.");
+                return;
+            }
+
+            // Calcular número de cotas que o usuário pode comprar (arredondado para baixo)
+            const numeroCotas = Math.floor(valorInvestido / precoCotaGlobal);
+
+            // Calcular o rendimento com base no número de cotas
+            const rendimento = numeroCotas * ultimoRendimentoGlobal;
+
+            // Exibir os valores nas spans corretas
+            document.getElementById('numeroCotas').textContent = numeroCotas;
+            document.getElementById('earnDollars').textContent = `R$ ${rendimento.toFixed(2)}`;
+        }
+
+        carregarInformacoes();
+    </script>
+
+</body>
+</html>
