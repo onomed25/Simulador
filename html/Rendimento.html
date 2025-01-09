@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preço e Último Rendimento</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/styles_menu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-
     <header>
-        <h1>Preço Do Rendimento</h1>
-        <nav>
-            <a href="/index.html">Home</a>
-            <a href="/html/earn.html">Earn</a>
-            <a href="/html/b3.html">B3</a>
-        </nav>
+        <div class="header-container">
+            <h1>Simulador Da Renda Fixa</h1>
+            <!-- Botão de menu hambúrguer -->
+            <button class="menu-toggle" aria-label="Abrir menu">
+             <i class='fas fa-bars' style='color:#969696'></i><!-- Ícone de hambúrguer -->
+            </button>
+            <nav>
+                <a href="/index.html" >Renda Fixa</a>
+                <a href="/html/earn.html">Earn</a>
+                <a href="/html/b3.html">Renda Varial</a>
+                <button class="login-button">Login</button>
+            </nav>
+          
+        </div>
     </header>
 
     <main>
@@ -140,6 +148,6 @@
 
         carregarInformacoes();
     </script>
-
+    <script src="/JS/script_menu.js"></script>
 </body>
 </html>
