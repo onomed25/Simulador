@@ -1,8 +1,9 @@
- {
-  "rewrites": [
+{
+  "redirects": [
     {
-      "source": "/b3/(.*)",
-      "destination": "/html/b3/$1.html"
+      "source": "/(.*)\\.html",
+      "destination": "/$1",
+      "permanent": true
     }
   ]
 }
