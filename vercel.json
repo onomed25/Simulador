@@ -15,11 +15,6 @@
       "source": "/html/b3/(.*)",
       "destination": "/b3/$1",
       "permanent": true
-    },
-    {
-      "source": "/html/b3/?",
-      "destination": "/b3/",
-      "permanent": true
     }
   ]
 }
