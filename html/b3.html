@@ -33,12 +33,11 @@
     </ul>
 
     <script>
-        async function pegarValorAcao(acao) {
+       async function pegarValorAcao(acao) {
             const proxyUrl = 'https://api.allorigins.win/get?url='; // Proxy para contornar CORS
             const url = `https://www.fundsexplorer.com.br/funds/${acao}`; // URL do fundo/ação
 
             try {
-                // Requisição para pegar o valor atual da ação/fundo
                 const response = await fetch(proxyUrl + encodeURIComponent(url));
                 const data = await response.json();
                 
@@ -46,7 +45,6 @@
                 const parser = new DOMParser();
                 const doc = parser.parseFromString(html, 'text/html');
 
-                // Buscando o preço da ação/fundo no HTML da página
                 const valorElemento = doc.querySelector('.headerTicker__content__price');
                 const variacaoElemento = doc.querySelector('.alta');
 
@@ -54,7 +52,6 @@
                     let valor = valorElemento.textContent.trim();
                     let variacao = variacaoElemento.textContent.trim();
 
-                    // Remover caracteres indesejados
                     valor = valor.replace(/[^\d,.-]/g, '');
                     variacao = variacao.replace(/[^\d,.-]/g, '');
                     
@@ -73,48 +70,55 @@
                 { simbolo: 'mxrf11', nome: 'MXRF11 - Fundo Imobiliário' },
                 {simbolo: 'gare11', nome: 'GARE11 - Fundo Imobiliário'},
                 {simbolo: 'xpsf11', nome: 'XPSF11 - Fundo De Fundos'}
-  
             ];
 
             const listaAcoes = document.getElementById('listaAcoes');
             const erroDiv = document.getElementById('erro');
-
-            // Limpa qualquer erro anterior
             erroDiv.style.display = 'none';
 
-            // Para cada ação na lista, busca os dados e exibe
             for (const acao of acoes) {
                 const { valor, variacao } = await pegarValorAcao(acao.simbolo);
 
-                // Se o valor ou a variação forem inválidos, continua para a próxima ação
                 if (valor === 'Erro ao carregar' || variacao === 'Erro ao carregar') {
                     erroDiv.style.display = 'block';
                     erroDiv.textContent = 'Erro ao carregar algumas ações.';
                     continue;
                 }
 
-                // Convertendo valores para numéricos
                 const valorNumerico = parseFloat(valor.replace(',', '.'));
                 const variacaoNumerica = parseFloat(variacao.replace(',', '.'));
 
-                // Adiciona a classe "valor-positivo" ou "valor-negativo" dependendo do valor
                 const valorClasse = valorNumerico > 0 ? 'valor-positivo' : 'valor-negativo';
                 const variacaoClasse = variacaoNumerica >= 0 ? 'variacao-positivo' : 'variacao-negativo';
 
-                // Formatar valor para moeda (R$)
                 const valorFormatado = `R$ ${valorNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-
-                // Agora, vamos formatar a variação como um número com até 2 casas decimais
                 const variacaoFormatada = `${(variacaoNumerica).toFixed(2)}%`;
 
-                // Criando o item de lista para cada ação
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="Rendimento?fundo=${acao.simbolo}" target="_blank">${acao.nome}</a>
+                li.innerHTML = `<a href="Rendimento?fundo=${acao.simbolo}">${acao.nome}</a>
                                 <span class="valor ${valorClasse}">${valorFormatado}</span>
                                 <span class="variacao ${variacaoClasse}">${variacaoFormatada}</span>`;
                 listaAcoes.appendChild(li);
+
+                const linkAcao = li.querySelector('.acao-link');
+                linkAcao.addEventListener('click', (event) => {
+                    event.preventDefault(); // Impede o redirecionamento para outra página
+
+                    // Exibe informações no modal
+                    document.getElementById('acaoNome').textContent = acao.nome;
+                    document.getElementById('acaoDetalhes').textContent = `Detalhes sobre a ação ${acao.nome}. Valor: ${valorFormatado}, Variação: ${variacaoFormatada}`;
+
+                    // Exibe o modal
+                    document.getElementById('modal').style.display = 'block';
+                });
             }
         }
+
+        // Fechar o modal
+        const closeButton = document.querySelector('.close-btn');
+        closeButton.addEventListener('click', () => {
+            document.getElementById('modal').style.display = 'none';
+        });
 
         // Chama a função para carregar as ações e seus valores
         carregarAcoes();
