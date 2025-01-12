@@ -109,7 +109,7 @@
 
                 // Criando o item de lista para cada ação
                 const li = document.createElement('li');
-                li.innerHTML = `<a href="Rendimento.html?fundo=${acao.simbolo}" target="_blank">${acao.nome}</a>
+                li.innerHTML = `<a href="Rendimento?fundo=${acao.simbolo}" target="_blank">${acao.nome}</a>
                                 <span class="valor ${valorClasse}">${valorFormatado}</span>
                                 <span class="variacao ${variacaoClasse}">${variacaoFormatada}</span>`;
                 listaAcoes.appendChild(li);
