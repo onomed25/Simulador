@@ -10,6 +10,11 @@
       "source": "/(.*)\\.html",
       "destination": "/$1",
       "permanent": true
+    },
+    {
+      "source": "/",
+      "destination": "/index.html",
+      "permanent": true
     }
   ]
 }
