@@ -1,14 +1,13 @@
-Ver novos posts
 {
   "rewrites": [
     {
-      "source": "/(.)",
+      "source": "/(.*)",
       "destination": "/html/$1.html"
     }
   ],
   "redirects": [
     {
-      "source": "/html/(.)\.html",
+      "source": "/html/(.*)\\.html",
       "destination": "/$1",
       "permanent": true
     }
