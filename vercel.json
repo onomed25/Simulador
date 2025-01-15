@@ -1,20 +1,15 @@
 {
   "rewrites": [
     {
-      "source": "/(.*)",
-      "destination": "/public/$1.html"
+      "source": "/(.)",
+      "destination": "/html/$1.html"
     }
   ],
   "redirects": [
     {
-      "source": "/(.*)\\.html",
+      "source": "/html/(.)\.html",
       "destination": "/$1",
-      "permanent": true
-    },
-    {
-      "source": "/",
-      "destination": "/index.html",
       "permanent": true
     }
   ]
-}
+} 
