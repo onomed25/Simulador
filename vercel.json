@@ -7,7 +7,7 @@
   ],
   "redirects": [
     {
-      "source": "/html/(.*)\\.html",
+      "source": "/html/(.*)\.html",
       "destination": "/$1",
       "permanent": true
     }
