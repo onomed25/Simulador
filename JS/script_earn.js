@@ -6,8 +6,9 @@ const apiUrls = {
 function calculateReturn() {
     const real = parseFloat(document.getElementById('real').value);
     const earn = parseFloat(document.getElementById('earn').value);
+    const years = parseFloat(document.getElementById('years').value);
 
-    if (isNaN(real) || isNaN(earn) || real <= 0 || earn <= 0) {
+    if (isNaN(real) || isNaN(earn) || isNaN(years) || real <= 0 || earn <= 0 || years <= 0) {
         document.getElementById('results').innerHTML = "<p class='error'>Por favor, preencha todos os campos com valores válidos maiores que zero.</p>";
         return;
     }
@@ -17,13 +18,22 @@ function calculateReturn() {
         .then(data => {
             const usdcToBrl = data['usd-coin'].brl;
 
-            const usdc = real / usdcToBrl; 
-            const r = usdc * (earn / 100);
-            const rreal = r * usdcToBrl; 
+            const initialUsdc = real / usdcToBrl; 
+            const annualRate = earn / 100;
 
-            document.getElementById('investedAmount').textContent = `${real.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} R$`;
-            document.getElementById('earnDollars').textContent = `${r.toFixed(2)} USDC`; // USDC é em dólares, então mantemos o formato americano aqui
-            document.getElementById('earnReais').textContent = `${rreal.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} R$`;
+            // Cálculo de juros compostos: A = P(1 + r)^t
+            const finalUsdc = initialUsdc * Math.pow((1 + annualRate), years);
+            const interestUsdc = finalUsdc - initialUsdc;
+
+            const finalBrl = finalUsdc * usdcToBrl; 
+            const interestBrl = interestUsdc * usdcToBrl;
+
+            document.getElementById('investedAmount').textContent = `${real.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+            document.getElementById('earnDollars').textContent = `${interestUsdc.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`;
+            document.getElementById('earnReais').textContent = `${interestBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+            document.getElementById('finalAmountDollars').textContent = `${finalUsdc.toLocaleString('en-US', { style: 'currency', currency: 'USD' })}`;
+            document.getElementById('finalAmountReais').textContent = `${finalBrl.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+            
             document.getElementById('results').innerHTML = "<p class='success'>Cálculo realizado com sucesso!</p>";
         })
         .catch(error => {
@@ -59,4 +69,3 @@ function fetchAndDisplayRates() {
 }
 
 window.onload = fetchAndDisplayRates;
-

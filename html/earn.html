@@ -6,24 +6,22 @@
     <title>Simulador</title>
     <link rel="stylesheet" href="/css/styles.css"> 
     <link rel="stylesheet" href="/css/styles_menu.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"><!-- Inclua o arquivo CSS externo -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="icon" type="image/png" sizes="180x180" href="simpli.png">
 </head>
 <body>
     <header>
         <div class="header-container">
             <h1>Simulador De Earn</h1>
-            <!-- Botão de menu hambúrguer -->
             <button class="menu-toggle" aria-label="Abrir menu">
-             <i class='fas fa-bars' style='color:#969696'></i><!-- Ícone de hambúrguer -->
+             <i class='fas fa-bars' style='color:#969696'></i>
             </button>
             <nav>
-                <a href="/index.html" >Renda Fixa</a>
-                <a href="/html/earn.html"class="active">Earn</a>
-                <a href="/html/b3.html">Renda Varial</a>
+                <a href="/index.html">Renda Fixa</a>
+                <a href="/html/earn.html" class="active">Earn</a>
+                <a href="/html/b3.html">Renda Variável</a>
                 <button class="login-button">Login</button>
             </nav>
-          
         </div>
     </header>
     
@@ -52,14 +50,20 @@
             </div>
 
             <div class="input-group">
-                <label for="earn">Quantos está rendendo por ano (%):</label>
+                <label for="earn">Rendimento anual (%):</label>
                 <div class="input-wrapper">
                     <input type="number" id="earn" step="0.01" placeholder="Digite o rendimento anual %">
                     <i class="icon-time"></i>
                 </div>
             </div>
             
-
+            <div class="input-group">
+                <label for="years">Tempo (em anos):</label>
+                <div class="input-wrapper">
+                    <input type="number" id="years" placeholder="Digite o número de anos" value="1">
+                    <i class="icon-time"></i>
+                </div>
+            </div>
 
             <button type="button" onclick="calculateReturn()">Calcular</button>
         </form>
@@ -71,17 +75,23 @@
                 <span class="amount" id="investedAmount"></span>
             </div>
             <div class="detail-item">
-                <span>Rendimento em Dólares:</span>
+                <span>Total em Juros (Dólares):</span>
                 <span class="amount" id="earnDollars"></span>
             </div>
             <div class="detail-item">
-                <span>Equivalente em Reais:</span>
+                <span>Total em Juros (Reais):</span>
                 <span class="amount" id="earnReais"></span>
+            </div>
+            <div class="detail-item">
+                <span>Valor Final (Dólares):</span>
+                <span class="amount" id="finalAmountDollars"></span>
+            </div>
+            <div class="detail-item">
+                <span>Valor Final (Reais):</span>
+                <span class="amount" id="finalAmountReais"></span>
             </div>
         </div>
     </main>
-
-    
 
     <script src="/JS/script_earn.js"></script>
     <script src="/JS/script_menu.js"></script>

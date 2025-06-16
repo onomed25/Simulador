@@ -1,6 +1,7 @@
+// Adicionado um listener para o evento DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    fetchRates();
-    fetchPrices();
+    // Chama a nova função para carregar os dados iniciais assim que a página carrega
+    loadInitialData(); 
 });
 
 const CONSTANTS = {
@@ -75,7 +76,7 @@ async function fetchFinancialRates() {
 }
 
 /**
- * Calcula os rendimentos de investimentos
+ * Calcula os rendimentos de investimentos, incluindo IOF acumulado dia a dia
  * @param {number} initialInvestment - Valor inicial do investimento
  * @param {number} timeInMonths - Tempo em meses
  * @param {number} selic - Taxa Selic anual
@@ -83,42 +84,63 @@ async function fetchFinancialRates() {
  * @returns {Object} Resultados dos cálculos
  */
 function calculateInvestments(initialInvestment, timeInMonths, selic, tr) {
-    // Cálculo da Poupança
-    let poupancaMonthlyRate = selic > CONSTANTS.SELIC_THRESHOLD 
-        ? CONSTANTS.POUPANCA_BASE_RATE 
-        : (selic / 100 * 0.7) / CONSTANTS.MONTHS_PER_YEAR;
-    
-    const trMonthly = tr / 100 / CONSTANTS.MONTHS_PER_YEAR;
-    const poupancaFinalAmount = initialInvestment * Math.pow((1 + (poupancaMonthlyRate + trMonthly)), timeInMonths);
+    const totalDays = timeInMonths * CONSTANTS.DAYS_PER_MONTH;
+    const dailyRate = ((selic / 100) - CONSTANTS.CDB_RATE_ADJUSTMENT) / (CONSTANTS.MONTHS_PER_YEAR * CONSTANTS.DAYS_PER_MONTH);
 
-    // Cálculo do CDB
-    const cdbRate = ((selic / 100) - CONSTANTS.CDB_RATE_ADJUSTMENT) / CONSTANTS.MONTHS_PER_YEAR;
-    let cdbGrossAmount = initialInvestment * Math.pow((1 + cdbRate), timeInMonths);
+    let balance = initialInvestment;
+    let cumulativeEarnings = 0;
+    let totalIofPaid = 0;
+    let iofFirstMonth = 0;
 
-    // Cálculo do IOF
-    let iofAmount = 0;
-    if (timeInMonths < 1) {
-        const days = timeInMonths * CONSTANTS.DAYS_PER_MONTH;
-        if (days < CONSTANTS.DAYS_PER_MONTH) {
-            const iofRate = Math.max(0, CONSTANTS.MAX_IOF - (days * CONSTANTS.IOF_REDUCTION_PER_DAY));
-            iofAmount = (cdbGrossAmount - initialInvestment) * iofRate;
-            cdbGrossAmount -= iofAmount;
+    // Tabela regressiva diária do IOF (alíquota em decimal)
+    const iofTable = [
+        0.96, 0.93, 0.90, 0.86, 0.83, 0.80, 0.76, 0.73, 0.70, 0.66,
+        0.63, 0.60, 0.56, 0.53, 0.50, 0.46, 0.43, 0.40, 0.36, 0.33,
+        0.30, 0.26, 0.23, 0.20, 0.16, 0.13, 0.10, 0.06, 0.03, 0.00
+    ];
+
+    for (let day = 1; day <= totalDays; day++) {
+        const dailyEarning = balance * dailyRate;
+        cumulativeEarnings += dailyEarning;
+        balance += dailyEarning;
+
+        if (day <= 30) {
+            const iofRate = iofTable[day - 1];
+            const iofToday = dailyEarning * iofRate;
+            totalIofPaid += iofToday;
+
+            if (day <= CONSTANTS.DAYS_PER_MONTH) {
+                iofFirstMonth += iofToday;
+            }
         }
     }
 
-    // Cálculo do Imposto de Renda
+    const cdbGrossAmount = balance;
+    const earningsBeforeTax = cdbGrossAmount - initialInvestment;
+
+    // Cálculo do IR
     let taxRate = CONSTANTS.TAX_RATES.UP_TO_6_MONTHS;
     if (timeInMonths > 24) taxRate = CONSTANTS.TAX_RATES.ABOVE_24_MONTHS;
     else if (timeInMonths > 12) taxRate = CONSTANTS.TAX_RATES.UP_TO_24_MONTHS;
     else if (timeInMonths > 6) taxRate = CONSTANTS.TAX_RATES.UP_TO_12_MONTHS;
 
-    const taxAmount = (cdbGrossAmount - initialInvestment) * taxRate;
-    const cdbNetAmount = cdbGrossAmount - taxAmount;
+    const taxAmount = earningsBeforeTax * taxRate;
+
+    const cdbNetAmount = cdbGrossAmount - totalIofPaid - taxAmount;
+
+    // Cálculo da Poupança
+    let poupancaMonthlyRate = selic > CONSTANTS.SELIC_THRESHOLD 
+        ? CONSTANTS.POUPANCA_BASE_RATE 
+        : (selic / 100 * 0.7) / CONSTANTS.MONTHS_PER_YEAR;
+
+    const trMonthly = tr / 100 / CONSTANTS.MONTHS_PER_YEAR;
+    const poupancaFinalAmount = initialInvestment * Math.pow((1 + (poupancaMonthlyRate + trMonthly)), timeInMonths);
 
     return {
         poupancaFinalAmount,
         cdbGrossAmount,
-        iofAmount,
+        iofAmount: totalIofPaid,
+        iofFirstMonthAmount: iofFirstMonth,
         taxAmount,
         cdbNetAmount
     };
@@ -160,7 +182,7 @@ function updateResultsDisplay(initialInvestment, timeInMonths, results) {
                 <p class="amount" aria-live="polite">${formatCurrency(results.taxAmount)}</p>
             </div>
             <div class="detail-item" role="listitem">
-                <span>IOF descontado:</span>
+                <span>IOF descontado total:</span>
                 <p class="amount" aria-live="polite">${formatCurrency(results.iofAmount)}</p>
             </div>
             <div class="detail-item" role="listitem">
@@ -179,9 +201,23 @@ function displayError(message) {
     document.getElementById('results').innerHTML = `
         <p class="error" role="alert">${message}</p>
     `;
+    // Também podemos exibir o erro nos campos de taxas
+    document.getElementById('selicRate').textContent = 'Erro';
+    document.getElementById('trRate').textContent = 'Erro';
+    document.getElementById('cdbRate').textContent = 'Erro';
 }
 
-const debouncedFetchRates = debounce(async () => {
+// Função para carregar os dados iniciais assim que a página é carregada
+async function loadInitialData() {
+    try {
+        const rates = await fetchFinancialRates();
+        updateRatesDisplay(rates);
+    } catch (error) {
+        displayError(`Erro ao carregar taxas: ${error.message}`);
+    }
+}
+
+const debouncedCalculate = debounce(async () => {
     try {
         const rates = await fetchFinancialRates();
         updateRatesDisplay(rates);
@@ -201,12 +237,5 @@ const debouncedFetchRates = debounce(async () => {
 // Event Listeners
 document.getElementById('investmentForm').addEventListener('submit', (e) => {
     e.preventDefault();
-    debouncedFetchRates();
+    debouncedCalculate();
 });
-
-document.getElementById('updatePrices').addEventListener('click', fetchPrices);
-
-// Função fetchPrices mantida como placeholder
-async function fetchPrices() {
-    // Implementação pendente conforme o código original
-}
